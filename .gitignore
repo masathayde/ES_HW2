@@ -1,11 +1,11 @@
-\#*\#
+git\#*\#
 *~
 TAGS
 db/schema.rb
 log/
 db/*.sqlite3
 tmp/
-
+Dockerfile
 # bundler state
 /.bundle
 /vendor/bundle/

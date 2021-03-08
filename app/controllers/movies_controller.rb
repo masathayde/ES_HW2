@@ -1,7 +1,27 @@
 # This file is app/controllers/movies_controller.rb
 class MoviesController < ApplicationController
   def index
-    @movies = Movie.all
+    @all_ratings = ['G', 'PG', 'PG-13', 'R', 'NC-17']
+    @checked_ratings = ['G', 'PG', 'PG-13', 'R', 'NC-17']
+    @style = "hilite"
+    sort_by = params[:sort_by] || session[:sort_by]
+    session[:sort_by] = params[:sort_by] unless params[:sort_by] == nil
+    ratings = params[:ratings]
+    if params[:ratings] != nil
+      chosen_ratings = {rating: params[:ratings].keys}
+      @checked_ratings = []
+      params[:ratings].keys.each do |rating|
+        @checked_ratings << rating
+      end
+      session[:ratings] = params[:ratings]
+    elsif session[:ratings] != nil
+      chosen_ratings = {rating: session[:ratings].keys}
+      @checked_ratings = []
+      session[:ratings].keys.each do |rating|
+        @checked_ratings << rating
+      end
+    end
+    @movies = Movie.order(sort_by).all.where(chosen_ratings)
   end
 
   def show
@@ -44,4 +64,5 @@ class MoviesController < ApplicationController
     flash[:notice] = "#{@movie.title} was deleted!"
     redirect_to movies_path
   end
+
 end
